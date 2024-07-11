@@ -45,14 +45,14 @@ const GetCurrentDate = () => {
     )
 }
 
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", (request, response, next) => {
     Person.find({}).then(result => {
         response.json(result)
     })
     .catch(error => next(error))
 })
 
-app.get("/info", (request, response) => {
+app.get("/info", (request, response, next) => {
     Person.find({}).then(result => {
         response.send(
             `
@@ -94,7 +94,7 @@ app.put("/api/persons/:id", (request, response, next) => {
 })
 
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
     .then(result => {
       response.status(204).end()
@@ -102,7 +102,7 @@ app.delete("/api/persons/:id", (request, response) => {
     .catch(error => next(error))
 })
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
     const body = request.body
 
     const person = new Person({
@@ -127,6 +127,8 @@ const errorHandler = (error, request, response, next) => {
   
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
     }
   
     next(error)
