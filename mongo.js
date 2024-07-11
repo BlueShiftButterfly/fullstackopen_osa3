@@ -1,8 +1,8 @@
 const mongoose = require("mongoose")
 
 if (process.argv.length < 3) {
-  console.log("give password as argument")
-  process.exit(1)
+    console.log("give password as argument")
+    process.exit(1)
 }
 
 const password = process.argv[2]
@@ -25,10 +25,10 @@ if (process.argv.length < 5) {
             console.log(`${person.name} ${person.number}`)
         })
         mongoose.connection.close()
-        
+
     })
 } else {
-    
+
 
     const personName = process.argv[3]
     const phoneNumber = process.argv[4]
@@ -38,7 +38,7 @@ if (process.argv.length < 5) {
         number: phoneNumber,
     })
 
-    person.save().then(result => {
+    person.save().then(() => {
         console.log(`added ${personName} number ${phoneNumber} to phonebook`)
         mongoose.connection.close()
     })
