@@ -17,10 +17,34 @@ mongoose.set("strictQuery", false)
 const personSchema = new mongoose.Schema({
     name: {
         type: String,
-        minlength: 3,
-        required: true 
+        minlength: [3, "must be at least 3 characters long"],
+        required: [true, "must not be empty"] 
     },
-    number: String,
+    number: {
+        type: String,
+        validate: [
+            {
+                validator: function (v) {
+                    let parts = v.split("-")
+                    return (parts.length == 2)
+                },
+                message: "must consist of 2 sets of numbers separated by a dash (-)"
+            },
+            {
+                validator: function (v) {
+                    let parts = v.split("-")
+                    if (parts.length != 2) return false
+                    return (
+                        parts[0].length >= 2 &&
+                        parts[0].length <= 3
+                    )
+                },
+                message: "first set of numbers must be 2-3 numbers long"
+            },
+        ],
+        minlength: [8, "must be at least 8 characters long"],
+        required: [true, "must not be empty"]
+    },
 })
 
 personSchema.set("toJSON", {
